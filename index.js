@@ -181,6 +181,13 @@ bot.hears('Инфо ℹ️', async (ctx) => {
     }
 })
 
+// bot.hears('Кинуть кубик🎲', async ctx => {
+//     const result = await ctx.telegram.sendDice(ctx.update.message.from.id).then(res =>{
+//         return res.dice.value
+//     })
+//     console.log(result)
+// })
+
 bot.hears('Админ-команды', async ctx => {
     try {
         const {id, first_name, last_name } = ctx.update.message.from

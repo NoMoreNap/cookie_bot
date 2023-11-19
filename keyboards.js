@@ -4,6 +4,7 @@ import {channels} from "./parthners.js";
 export function getMainMenu() {
     return Markup.keyboard([
         ['Разломить печеньку 🥠'],
+        //['Кинуть кубик🎲'],
         ['Инфо ℹ️']
     ]).resize()
 }
@@ -11,6 +12,7 @@ export function getMainMenu() {
 export function getSecondMenu() {
     return Markup.keyboard([
         ['Разломить еще печеньку 🥠'],
+        //['Кинуть кубик🎲'],
         ['Инфо ℹ️']
 
     ]).resize()
@@ -19,10 +21,12 @@ export function getSecondMenu() {
 export function adminsKeyboard() {
     return [Markup.keyboard([
         ['Разломить печеньку 🥠'],
+        //['Кинуть кубик🎲'],
         ['Инфо ℹ️', 'Админ-команды']
     ]).resize(),
         Markup.keyboard([
         ['Разломить еще печеньку 🥠'],
+        //['Кинуть кубик🎲'],
         ['Инфо ℹ️', 'Админ-команды']
     ]).resize()]
 }
