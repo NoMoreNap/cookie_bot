@@ -17,13 +17,18 @@ const updateLimit = async () => {
         const db = await mongoose.connect(`mongodb://127.0.0.1:27017/cookie_tg`);
         const data = await userModel.distinct('tid')
         const {modifiedCount} = await userModel.updateMany({tid: {$exists: true}}, {$inc: {'info.limit': 1}})
+        let c = 0
         for (const tid of data) {
-            await bot.telegram.sendMessage(tid, `Я принес тебе одну печеньку 🥠`)
-            await delay(100)
+            try {
+                await bot.telegram.sendMessage(tid, `Я принес тебе одну печеньку 🥠`)
+                c++
+            } catch (e) {
+                console.log(e)
+            }
 
         }
         const date = new Date()
-        await bot.telegram.sendMessage(756656853,`Обновил лимит в ${date.getHours()}:${date.getMinutes()}\n\nИзменено ${modifiedCount}\n\nРассылка звершена в ${data.length} аккаунтов`)
+        await bot.telegram.sendMessage(756656853,`Обновил лимит в ${date.getHours()}:${date.getMinutes()}\n\nИзменено ${modifiedCount}\n\nРассылка звершена в ${c} аккаунтов`)
     } catch (e) {
         console.log(e)
     }

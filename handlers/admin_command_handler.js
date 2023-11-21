@@ -16,8 +16,23 @@ export const adminCommandsHandler = async (ctx, dbUsers) => {
                         const monthData = await dbUsers.find('reg_ts', {$gt: month})
                         const weekData = await dbUsers.find('reg_ts', {$gt: week})
                         const dayData = await dbUsers.find('reg_ts', {$gt: day})
+                        const promos = await dbUsers.getPromos()
+                        const promosCounter = {}
+                        for (const promo of promos) {
+                            for (const promoElement of promo.info.promos) {
+                                if (!promosCounter[promoElement]) {
+                                    promosCounter[promoElement] = 0
+                                }
+                                    promosCounter[promoElement] += 1
+                            }
+                        }
 
-                        msg += `\n\nНовых игроков за месяц: ${monthData.length}\nНовых игроков за неделю: ${weekData.length}\nНовых игроков за день: ${dayData.length}`
+                        const destructPromos = Object.entries(promosCounter)
+
+                        msg += `\n\nНовых игроков за месяц: ${monthData.length}\nНовых игроков за неделю: ${weekData.length}\nНовых игроков за день: ${dayData.length}\n\n`
+                        for (const destructPromo of destructPromos) {
+                            msg += `${destructPromo[0]}: ${destructPromo[1]}\n`
+                        }
                         return msg
                     default:
                         break;

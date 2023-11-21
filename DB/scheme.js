@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
         cookies: {
             type: [Number],
             required: false
+        },
+        promos: {
+            type: [String],
+            required: false
         }
     }
 });

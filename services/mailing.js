@@ -37,15 +37,14 @@ const startMailing = async (text) => {
             //     continue
             // }
             const reffer_text = `
-✨💕 Конкурс от Печеньки\nПриз - коробка печенья с предсказанием 🥠\n\n
-Разыграем коробку с печеньем среди тех, кто пригласит в бота друзей 💓\n\n
-Твоя ссылка для приглашения -\nhttps://t.me/cookie_slave_bot?start=${tid}\n\n
-Просто отправь ее друзьям или в любой чат 💬`
+✨ Привет! Спасибо, что читаешь мои предсказания, у меня для тебя есть подарок ❤\n\n
+🎧Промокод на VK Музыку бесплатно до конца года (и даже больше!) \n\n
+🌟Твой промокод 👉 GET90ZAKS\n🌟Активируй тут 👉 https://gtblg.ru/prgbZr?erid=Kra23ZP4e\n\n
+❗он дейсвует всего несколько дней, лучше активируй сейчас ✨`
            try {
-               await bot.telegram.sendPhoto(tid, 'https://sun9-70.userapi.com/impg/JMpOTCzAIx6A9gkMYUI57wwl5kZJsjDzpuqsHg/kMgPs2SgnWU.jpg?size=1024x1024&quality=95&sign=dc60beb86bbaba08259266a7454354bc&type=album', {parse_mode: 'HTML', caption: reffer_text})
+               await bot.telegram.sendPhoto(tid, 'https://sun9-76.userapi.com/impg/bY0IBLB09wFaJNOtNlmGa4M1P-kcQJyDAF3a-Q/5T_P9VX1ABg.jpg?size=1920x1080&quality=95&sign=475993c263e3bb93e13f7ed1375aec05&type=album', {parse_mode: 'HTML', caption: reffer_text})
                c++
                console.log(`Отправлено ${c} из ${data.length}`)
-               await delay(50)
            } catch (e) {
                 console.log('пропускаем')
            }

@@ -29,6 +29,13 @@ export class Mongo  {
         return this.db.updateOne({tid: tid}, {$push: {'info.refferals': refferal}})
 
     }
+    async getPromos() {
+        return this.db.find({$where: 'this.info.promos.length > 0'}, {'info.promos': true})
+    }
+    async pushPromo(tid, promo) {
+        return this.db.updateOne({tid: tid}, {$push: {'info.promos': promo}})
+
+    }
 
     async pushCookie(tid, id) {
         return this.db.updateOne({tid: tid}, {$push: {'info.cookies': id}})

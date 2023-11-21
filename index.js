@@ -3,8 +3,9 @@ import {Telegraf} from 'telegraf'
 import * as dotenv from 'dotenv'
 import {Mongo} from "./DB/actions.js";
 import {getMainMenu, subsKeyboard, getSecondMenu, adminsKeyboard} from './keyboards.js'
-import {checkSubscribe, getPrediction} from "./functions/main.js";
+import {checkSubscribe, getPrediction, defferedMail} from "./functions/main.js";
 import {adminCommandsHandler} from "./handlers/admin_command_handler.js";
+import {mocks} from "./functions/cookies.js";
 
 dotenv.config()
 
@@ -17,8 +18,11 @@ const admins_uid = [386715412,756656853]
 
 
 bot.start(async (ctx) => {
+
     try {
         const {id, first_name, last_name, username } = ctx.update.message.from
+        // defferedMail(id, ctx,0, dbUsers)
+
         const data = await dbUsers.find('tid', id)
         if (!data.length) {
             const reffer_tid = ctx.startPayload !== '' ? +ctx.startPayload : 0
@@ -33,7 +37,8 @@ bot.start(async (ctx) => {
                     refferals: [],
                     oppend_cookie: 0,
                     cookies: [],
-                    limit: 1
+                    limit: 1,
+                    promos: []
                 },
             }
             if (reffer_tid) {
@@ -48,6 +53,7 @@ bot.start(async (ctx) => {
             const insertedData = await dbUsers.insert(newUser)
             const keyboard = admins_uid.indexOf(id) === -1 ? getMainMenu() : adminsKeyboard()[0];
             try {
+                defferedMail(id, ctx,15*60*1000, dbUsers)
                 return await ctx.replyWithPhoto(
                     'https://sun9-25.userapi.com/impg/sKo9SLLPdWl8yNfx0VYrSkdp-zElDlWr7T3BmQ/LHgePzxzuwU.jpg?size=1024x1024&quality=95&sign=a74b7a0b4174180f2f5ec80e3686b607&type=album',
                     {
@@ -78,7 +84,6 @@ bot.start(async (ctx) => {
 
 bot.hears(/Разломить(.*)/, async (ctx) => {
     try {
-
         const {id, first_name, last_name, username } = ctx.update.message.from
         const data = await dbUsers.find('tid', id)
         if (!data.length) {
@@ -92,12 +97,14 @@ bot.hears(/Разломить(.*)/, async (ctx) => {
                     refferals: [],
                     oppend_cookie: 0,
                     cookies: [],
-                    limit: 1
+                    limit: 1,
+                    promos: []
                 }
 
             }
             await dbUsers.insert(newUser)
             const keyboard = admins_uid.indexOf(id) === -1 ? getMainMenu() : adminsKeyboard()[0];
+            defferedMail(id,ctx,15*60*1000, dbUsers)
             return await ctx.replyWithPhoto(
                 'https://sun9-25.userapi.com/impg/sKo9SLLPdWl8yNfx0VYrSkdp-zElDlWr7T3BmQ/LHgePzxzuwU.jpg?size=1024x1024&quality=95&sign=a74b7a0b4174180f2f5ec80e3686b607&type=album',
                 {
@@ -175,6 +182,26 @@ bot.hears('Инфо ℹ️', async (ctx) => {
         }
         const [user] = data
         const msg = `✨${user.info.first_name}✨\n\n🥠Печенек: ${user.info.limit}\n✉️Открыто: ${user.info.oppend_cookie}\n👫Приглашено: ${user.info.refferals.length}`
+        await ctx.reply(msg)
+    } catch (e) {
+        console.log(e)
+    }
+})
+bot.hears('Посмотреть мои печеньки 🍪', async (ctx) => {
+    try {
+        const {id, first_name, last_name } = ctx.update.message.from
+        const [data] = await dbUsers.find('tid', id)
+        let msg = ''
+        if (data.info.cookies.length < 1) {
+            msg = 'К сожалению, у вас нет открытых печенек :('
+        } else {
+            const cookies = Array.from(new Set(data.info.cookies))
+            console.log(mocks.length)
+            for (const cookiesId of cookies) {
+                mocks[cookiesId] && (msg += `✨ ${mocks[cookiesId]}\n`)
+            }
+        }
+
         await ctx.reply(msg)
     } catch (e) {
         console.log(e)

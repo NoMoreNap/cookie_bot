@@ -1,4 +1,6 @@
 import {channels} from "../parthners.js";
+import {dbUsers} from "../index.js";
+import {mocks} from "./cookies.js";
 
 export const checkSubscribe = async (ctx, id) =>{
 
@@ -14,24 +16,31 @@ export const checkSubscribe = async (ctx, id) =>{
 }
 
 export const getPrediction= (ids) => {
-    const mocks = [
-        'ближайший год будет наполнен романтикой',
-        "скоро тебя ждет свидание",
-        'не сомневайся, это правильный выбор',
-        'самое время загадать желание',
-        "вас ожидает радостное известие",
-        'все точно получится, не останавливайся'
-    ]
+
+    const mocksWrapper = [...mocks]
     if (ids.length) {
         for (const index of ids) {
-            mocks.splice(index,1)
+            mocksWrapper.splice(index,1)
         }
     }
 
 
+    const id = Math.floor(Math.random()*mocksWrapper.length)
+    const index = mocks.indexOf(mocksWrapper[id])
+    return [mocksWrapper[id],index]
+}
 
+export const defferedMail = (tid,ctx, ms, ) => {
+    const text = "🌞 Привет! Спасибо, что читаешь мои предсказания, у меня для тебя есть подарок 🔥\n\n🎥 Промокод на VK Музыку бесплатно до конца года (и даже больше!)\n\n🌟Твой промокод 👉 `GET90ZAKS`\n🌟Активируй тут ➡️ ТЫК (https://gtblg.ru/prgbZr?erid=Kra23ZP4e)\n\n❗️он дейсвует всего несколько дней, лучше активируй сейчас ✨"
+    const img = 'https://sun9-76.userapi.com/impg/bY0IBLB09wFaJNOtNlmGa4M1P-kcQJyDAF3a-Q/5T_P9VX1ABg.jpg?size=1920x1080&quality=95&sign=475993c263e3bb93e13f7ed1375aec05&type=album'
+    setTimeout(async () => {
 
-    const id = Math.floor(Math.random()*mocks.length)
-    return [mocks[id],id]
+        try {
+            await ctx.telegram.sendPhoto(tid, img, {parse_mode: 'Markdown', caption: text})
+            await dbUsers.pushPromo(tid, 'VK');
+        } catch (e) {
+            console.log(e)
+        }
+    },ms)
 }
 
